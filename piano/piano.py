@@ -8,38 +8,47 @@ piano = AliotObj("piano")
 
 def button_do(data):
     print("do")
+    piano.update_component("MyLog", "Do")
     piano_utils.set_button_state(1)
 
 def button_re(data):
     print("re")
+    piano.update_component("MyLog", "Re")
     piano_utils.set_button_state(2)
 
 def button_mi(data):
     print("mi")
+    piano.update_component("MyLog", "Mi")
     piano_utils.set_button_state(3)
 
 def button_fa(data):
     print("fa")
+    piano.update_component("MyLog", "Fa")
     piano_utils.set_button_state(4)
 
 def button_sol(data):
     print("sol")
+    piano.update_component("MyLog", "Sol")
     piano_utils.set_button_state(5)
 
 def button_la(data):
     print("la")
+    piano.update_component("MyLog", "La")
     piano_utils.set_button_state(6)
 
 def button_si(data):
     print("si")
+    piano.update_component("MyLog", "Si")
     piano_utils.set_button_state(7)
 
 def button_do2(data):
     print("do2")
+    piano.update_component("MyLog", "Do2")
     piano_utils.set_button_state(8)
 
 def music(data):
     for i in data.split(";"):
+        piano.update_component("MyLog", "Music")
         piano_utils.set_button_state(int(i))
         time.sleep(2)
 
