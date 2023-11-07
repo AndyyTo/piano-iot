@@ -10,10 +10,16 @@ def start():
     while True:
         try:
             line = piano_utils.listen().split(";")
+            print("test" + " " + str(line))
             if line:
-                if line[0] == "button":
-                    piano.update_component("MyLog", line[1])
+                if line[2] == "button":
+                    piano.update_component("MyLog", line[3])
                 if line[0] == "frequency":
+                    print(line)
+                    piano.update_doc({
+                        "/doc/frequency": line[1]
+                    })
+                    time.sleep(1)
                     piano.update_component("Buzzer", line[1])
             time.sleep(1)
         except KeyboardInterrupt:

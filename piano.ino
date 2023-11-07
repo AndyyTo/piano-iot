@@ -38,8 +38,8 @@ void setup() {
 void loop() {
   for (int i = 0; i < buttonCount; i++) {
     if (digitalRead(buttons[i].pin) == LOW) {
-      Serial.println("button;" + buttons[i].name);
-      playNote(buttons[i].frequency);
+
+      playNote(buttons[i]);
       delay(200);
       noTone(buzzerPin);
     }
@@ -49,7 +49,7 @@ void loop() {
     int command = Serial.parseInt();
 
     if (command >= 1 && command <= 8) {
-      playNote(command);
+      playNote(buttons[command - 1]);
       delay(200);
       noTone(buzzerPin);
       delay(300);
@@ -57,7 +57,7 @@ void loop() {
   }
 }
 
-void playNote(int note) {
-  tone(buzzerPin, note);
-  Serial.println("frequency;" + String(note));
+void playNote(button button_) {
+  tone(buzzerPin, button_.frequency);
+  Serial.println("frequency;" + String(button_.frequency) + ";button;" + button_.name);
 }
