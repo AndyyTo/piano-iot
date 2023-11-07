@@ -1,4 +1,5 @@
 // Define note frequencies
+
 #define NOTE_DO 262
 #define NOTE_RE 294
 #define NOTE_MI 330
@@ -17,7 +18,7 @@ const int buzzerPin = 11;
 
 void setup() {
   pinMode(buzzerPin, OUTPUT);
-  
+
   for (int i = 0; i < buttonCount; i++) {
     pinMode(buttons[i], INPUT_PULLUP);
   }
@@ -27,11 +28,9 @@ void setup() {
 void loop() {
   for (int i = 0; i < buttonCount; i++) {
     if (digitalRead(buttons[i]) == LOW) {
-      Serial.println(i);
       playNote(i + 1);
-      Serial.println("bbbbbb");
       delay(200);
-      noTone(buzzerPin); 
+      noTone(buzzerPin);
     }
   }
 
@@ -40,7 +39,6 @@ void loop() {
 
     if (command >= 1 && command <= 8) {
       playNote(command);
-      Serial.println("aaaaa");
       delay(200);
       noTone(buzzerPin);
       delay(300);
@@ -52,27 +50,35 @@ void playNote(int noteIndex) {
   switch (noteIndex) {
     case 1:
       tone(buzzerPin, NOTE_DO);
+      Serial.println(String(NOTE_DO) + ";Do");
       break;
     case 2:
       tone(buzzerPin, NOTE_RE);
+      Serial.println(String(NOTE_RE) + ";Re");
       break;
     case 3:
       tone(buzzerPin, NOTE_MI);
+      Serial.println(String(NOTE_MI) + ";Mi");
       break;
     case 4:
       tone(buzzerPin, NOTE_FA);
+      Serial.println(String(NOTE_FA) + ";Fa");
       break;
     case 5:
       tone(buzzerPin, NOTE_SO);
+      Serial.println(String(NOTE_SO) + ";Sol");
       break;
     case 6:
       tone(buzzerPin, NOTE_LA);
+      Serial.println(String(NOTE_LA) + ";La");
       break;
     case 7:
       tone(buzzerPin, NOTE_SI);
+      Serial.println(String(NOTE_SI) + ";Si");
       break;
     case 8:
       tone(buzzerPin, NOTE_DO2);
+      Serial.println(String(NOTE_DO2) + ";Do2");
       break;
   }
 }

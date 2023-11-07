@@ -1,21 +1,27 @@
 import serial
-import time 
+import time
 import threading
 
-ser = serial.Serial('COM8', 9600)
+ser = serial.Serial('COM3', 9600)
 
 _button_state = False
+
+
+def listen():
+    return ser.readline().decode().strip()
 
 def set_button_state(state):
     global _button_state
     if state in (1, 2, 3, 4, 5, 6, 7, 8):
         ser.write(str(state).encode())
 
+
 def get_button_state():
     return _button_state
 
+
 def read_from_serial():
-    global  _button_state
+    global _button_state
     try:
         ser.flush()
         while True:
