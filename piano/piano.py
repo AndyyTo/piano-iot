@@ -10,11 +10,11 @@ def start():
     while True:
         try:
             line = piano_utils.listen().split(";")
-            print(line)
-            print("yo")
             if line:
-                piano.update_component("Buzzer", line[0])
-                piano.update_component("MyLog", line[1])
+                if line[0] == "button":
+                    piano.update_component("MyLog", line[1])
+                if line[0] == "frequency":
+                    piano.update_component("Buzzer", line[1])
             time.sleep(1)
         except KeyboardInterrupt:
             break

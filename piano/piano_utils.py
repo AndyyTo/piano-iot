@@ -2,7 +2,7 @@ import serial
 import time
 import threading
 
-ser = serial.Serial('COM3', 9600)
+ser = serial.Serial('COM4', 9600)
 
 _button_state = False
 
