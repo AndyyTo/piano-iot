@@ -1,4 +1,3 @@
-
 ## Arduino-Powered AI Piano | IoT Innovation at Alivecode 🌐
 
 Excited to share my latest project where I've combined my passion for music, technology, and artificial intelligence! 🚀
@@ -27,7 +26,7 @@ The project has been a tremendous learning experience, honing my skills in hardw
 
 ##  🔗 Explore the Project:
     https://alivecode.ca/iot/projects/ba2fc4f6-effa-4da9-89da-9e97c7de0412 
-    https://gitlab.com/e2178145/piano-iot
+    https://lnkd.in/eYWUeJZ3 
 
 Skills: Arduino IDE · Internet of Things (IoT) · Artificial Intelligence (AI) · Raspberry Pi · Python (Programming Language)Skills: Arduino IDE · Internet of Things (IoT) · Artificial Intelligence (AI) · Raspberry Pi · Python (Programming Language)
 
