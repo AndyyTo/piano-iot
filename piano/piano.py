@@ -2,81 +2,106 @@ from aliot.aliot_obj import AliotObj
 import piano_utils
 import time
 import sys
+import cv2
+import mediapipe as mp
+import handWatcher
 
 piano = AliotObj("piano")
 
+mp_draw = mp.solutions.drawing_utils
+mp_hand = mp.solutions.hands
+
+cap = cv2.VideoCapture(0)
+tipIds = [4, 8, 12, 16, 20]
+
 
 def start():
+    t = time.time()
     while True:
-        try:
-            line = piano_utils.listen().split(";")
-            print("test" + " " + str(line))
-            if line:
-                if line[2] == "button":
-                    piano.update_component("MyLog", line[3])
-                if line[0] == "frequency":
-                    print(line)
-                    piano.update_doc({
-                        "/doc/frequency": line[1]
-                    })
-                    time.sleep(1)
-                    piano.update_component("Buzzer", line[1])
-            time.sleep(1)
-        except KeyboardInterrupt:
-            break
+        with mp_hand.Hands(min_detection_confidence=0.5,
+                           min_tracking_confidence=0.5) as hands:
+            ret, image = cap.read()
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            image.flags.writeable = False
+            results = hands.process(image)
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            lmList = []
+            if results.multi_hand_landmarks:
+                for hand_landmark in results.multi_hand_landmarks:
+                    myHands = results.multi_hand_landmarks[0]
+                    for id, lm in enumerate(myHands.landmark):
+                        h, w, c = image.shape
+                        cx, cy = int(lm.x * w), int(lm.y * h)
+                        lmList.append([id, cx, cy])
+                    mp_draw.draw_landmarks(image, hand_landmark, mp_hand.HAND_CONNECTIONS)
+            fingers = 0
+            if len(lmList) != 0:
+                if lmList[tipIds[0]][1] > lmList[tipIds[0] - 1][1]:
+                    fingers += 1
+                for i in tipIds[1:]:
+                    if lmList[i][2] < lmList[i - 1][2]:
+                        fingers += 2 ** (i // 4 - 1)
+                if time.time() - t > 1:
+                    t = time.time()
+                    print(fingers)
+                    piano_utils.set_button_state(fingers)
+            cv2.imshow("result", image)
+            k = cv2.waitKey(1)
+            if k == ord('q'):
+                break
+        # try:
+        #     line = piano_utils.listen().split(";")
+        #     if line:
+        #         piano.update_component("MyLog", line[1])
+        #         piano.update_component("Buzzer", line[0])
+        # except KeyboardInterrupt:
+        #     break
 
 
 def button_do(data):
-    print("do")
     piano.update_component("MyLog", "Do")
     piano_utils.set_button_state(1)
 
 
 def button_re(data):
-    print("re")
     piano.update_component("MyLog", "Re")
     piano_utils.set_button_state(2)
 
 
 def button_mi(data):
-    print("mi")
     piano.update_component("MyLog", "Mi")
     piano_utils.set_button_state(3)
 
 
 def button_fa(data):
-    print("fa")
     piano.update_component("MyLog", "Fa")
     piano_utils.set_button_state(4)
 
 
 def button_sol(data):
-    print("sol")
     piano.update_component("MyLog", "Sol")
     piano_utils.set_button_state(5)
 
 
 def button_la(data):
-    print("la")
     piano.update_component("MyLog", "La")
     piano_utils.set_button_state(6)
 
 
 def button_si(data):
-    print("si")
     piano.update_component("MyLog", "Si")
     piano_utils.set_button_state(7)
 
 
 def button_do2(data):
-    print("do2")
     piano.update_component("MyLog", "Do2")
     piano_utils.set_button_state(8)
 
 
 def music(data):
+    piano.update_component("MyLog", "Music")
     for i in data.split(";"):
-        piano.update_component("MyLog", "Music")
         piano_utils.set_button_state(int(i))
         time.sleep(2)
 
@@ -93,3 +118,5 @@ piano.on_action_recv(action_id="music", callback=music)
 
 piano.on_start(callback=start)
 piano.run()
+cap.release()
+cv2.destroyAllWindows()

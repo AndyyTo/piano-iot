@@ -1,14 +1,16 @@
 import serial
 import time
 import threading
+import handWatcher
 
-ser = serial.Serial('COM4', 9600)
+ser = serial.Serial('COM5', 9600)
 
 _button_state = False
 
 
 def listen():
     return ser.readline().decode().strip()
+
 
 def set_button_state(state):
     global _button_state
@@ -33,8 +35,3 @@ def read_from_serial():
         print("Exiting...")
 
 
-try:
-    t = threading.Thread(target=read_from_serial)
-    t.start()
-except KeyboardInterrupt:
-    print("Exiting...")

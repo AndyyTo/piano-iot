@@ -59,5 +59,5 @@ void loop() {
 
 void playNote(button button_) {
   tone(buzzerPin, button_.frequency);
-  Serial.println("frequency;" + String(button_.frequency) + ";button;" + button_.name);
+  Serial.println(String(button_.frequency) + ";" + button_.name);
 }
