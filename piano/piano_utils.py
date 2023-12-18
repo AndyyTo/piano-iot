@@ -1,9 +1,8 @@
 import serial
 import time
 import threading
-import handWatcher
 
-ser = serial.Serial('COM5', 9600)
+ser = serial.Serial('COM6', 9600)
 
 _button_state = False
 

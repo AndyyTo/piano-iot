@@ -4,7 +4,7 @@ import time
 import sys
 import cv2
 import mediapipe as mp
-import handWatcher
+import threading
 
 piano = AliotObj("piano")
 
@@ -16,6 +16,16 @@ tipIds = [4, 8, 12, 16, 20]
 
 
 def start():
+    while True:
+        try:
+            line = piano_utils.listen().split(";")
+            if line:
+                piano.update_component("MyLog", line[1])
+                piano.update_component("Buzzer", line[0])
+        except KeyboardInterrupt:
+            break
+
+def startMediapipe():
     t = time.time()
     while True:
         with mp_hand.Hands(min_detection_confidence=0.5,
@@ -50,14 +60,13 @@ def start():
             k = cv2.waitKey(1)
             if k == ord('q'):
                 break
-        # try:
-        #     line = piano_utils.listen().split(";")
-        #     if line:
-        #         piano.update_component("MyLog", line[1])
-        #         piano.update_component("Buzzer", line[0])
-        # except KeyboardInterrupt:
-        #     break
+#create threads for functions
+thread1 = threading.Thread(target=start)
+thread2 = threading.Thread(target=startMediapipe)
 
+#start the threads
+thread1.start()
+thread2.start()
 
 def button_do(data):
     piano.update_component("MyLog", "Do")
