@@ -87,7 +87,7 @@ def button_fa(data):
     piano.update_component("MyLog", "Fa")
     piano_utils.set_button_state(4)
 
-
+    
 def button_sol(data):
     piano.update_component("MyLog", "Sol")
     piano_utils.set_button_state(5)
