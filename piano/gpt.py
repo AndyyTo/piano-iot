@@ -8,26 +8,26 @@ headers = {
     "Content-Type": "application/json"
 }
 
-body = {
-    "model": "gpt-3.5-turbo",
-    "messages": [
-        {
-            "role": "system",
-            "content": "You are an helpful assistant."
-        },
-        {
-            "role": "user",
-            "content": "Your job is to generate me a chord progression in the style of jazz. The chord progression " +
-                       "should be 8 bars long." +
-                       "Your answer should be a list of 8 chords, each chord separated by a comma. Please only use MAJOR"
-                       ", MINOR and 7TH chords. Do not use b5 chords. Makes sure to replace flat chords by their sharp equivalent, for example Bbmaj7 should be replaced by A#maj7. Do not include any other text in your response. DO NOT INCLUDE ANY TEXT IN YOUR RESPONSE."
-        },
 
-    ]
-}
+def get_chords(genre):
+    body = {
+        "model": "gpt-3.5-turbo",
+        "messages": [
+            {
+                "role": "system",
+                "content": "You are an helpful assistant."
+            },
+            {
+                "role": "user",
+                "content": f"Your job is to generate me a chord progression in the style of {genre}. The chord progression " +
+                           "should be 4 bars long." +
+                           "Your answer should be a list of 4 chords, each chord separated by a comma. Please only use MAJOR"
+                           ", MINOR and 7TH chords. Do not use b5 chords. Makes sure to replace flat chords by their sharp equivalent, for example Bbmaj7 should be replaced by A#maj7. Do not include any other text in your response. DO NOT INCLUDE ANY TEXT IN YOUR RESPONSE."
+            },
 
+        ]
+    }
 
-def get_chords():
     return requests.post(url, json=body, headers=headers).json()["choices"][0]["message"]["content"]
 
 
@@ -36,19 +36,19 @@ Notes = ["c4", "c#4", "d4", "d#4", "e4", "f4", "f#4", "g4", "g#4", "a4", "a#4", 
 
 Chords = {}
 frequencies = {
-    "c4": 261.63,
+    "c4": 261.63, #Do
     "c#4": 277.18,
-    "d4": 293.66,
+    "d4": 293.66, #Re
     "d#4": 311.13,
-    "e4": 329.63,
-    "f4": 349.23,
+    "e4": 329.63, #Mi
+    "f4": 349.23, #Fa
     "f#4": 369.99,
-    "g4": 392.00,
+    "g4": 392.00, #SOL
     "g#4": 415.30,
-    "a4": 440.00,
+    "a4": 440.00, #La
     "a#4": 466.16,
-    "b4": 493.88,
-    "c5": 523.25,
+    "b4": 493.88, #Si
+    "c5": 523.25, #Do2
     "c#5": 554.37,
     "d5": 587.33,
     "d#5": 622.25,
@@ -61,6 +61,11 @@ frequencies = {
     "a#5": 932.33,
     "b5": 987.77
 }
+cMajor = ["c4", "d4", "e4", "f4", "g4","a4", "b4", "c5"]
+
+def convert(note):
+    return frequencies[note]
+cMajorFrequencies = list(map(convert, cMajor))
 
 for i in range(12):
     Note = Notes[i][:-1]
@@ -100,10 +105,6 @@ def chord_deconstructor(chords):
 def get_frequencie(note):
     return frequencies[note]
 
+def generate_music(data):
+    return list(map(get_frequencie, chord_deconstructor(chord_corrector(get_chords(data)))))
 
-# test = get_chords()
-# print(list(Chords.keys()))
-# print(test)
-# print(chord_corrector(test))
-# print(chord_deconstructor(chord_corrector(test)))
-# print(list(map(get_frequencie, chord_deconstructor(chord_corrector(test)))))

@@ -5,6 +5,7 @@ import sys
 import cv2
 import mediapipe as mp
 import threading
+import gpt
 
 piano = AliotObj("piano")
 
@@ -20,6 +21,7 @@ def start():
         try:
             line = piano_utils.listen().split(";")
             if line:
+                print(line)
                 piano.update_component("MyLog", line[1])
                 piano.update_component("Buzzer", line[0])
         except KeyboardInterrupt:
@@ -87,7 +89,7 @@ def button_fa(data):
     piano.update_component("MyLog", "Fa")
     piano_utils.set_button_state(4)
 
-    
+
 def button_sol(data):
     piano.update_component("MyLog", "Sol")
     piano_utils.set_button_state(5)
@@ -114,6 +116,10 @@ def music(data):
         piano_utils.set_button_state(int(i))
         time.sleep(2)
 
+def gptPrompt(data):
+    chords = gpt.generate_music(data)
+    piano_utils.frequencies_array(chords)
+
 
 piano.on_action_recv(action_id="do", callback=button_do)
 piano.on_action_recv(action_id="re", callback=button_re)
@@ -124,6 +130,8 @@ piano.on_action_recv(action_id="la", callback=button_la)
 piano.on_action_recv(action_id="si", callback=button_si)
 piano.on_action_recv(action_id="do2", callback=button_do2)
 piano.on_action_recv(action_id="music", callback=music)
+
+piano.on_action_recv(action_id="prompt", callback=gptPrompt)
 
 piano.on_start(callback=start)
 piano.run()

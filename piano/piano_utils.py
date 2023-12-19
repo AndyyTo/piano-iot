@@ -1,6 +1,7 @@
 import serial
 import time
 import threading
+import gpt
 
 ser = serial.Serial('COM6', 9600)
 
@@ -10,15 +11,31 @@ _button_state = False
 def listen():
     return ser.readline().decode().strip()
 
+state_to_frequency = {
+    1: gpt.frequencies["c4"],
+    2: gpt.frequencies["d4"],
+    3: gpt.frequencies["e4"],
+    4: gpt.frequencies["f4"],
+    5: gpt.frequencies["g4"],
+    6: gpt.frequencies["a4"],
+    7: gpt.frequencies["b4"],
+    8: gpt.frequencies["c5"],   
+}
 
 def set_button_state(state):
-    global _button_state
-    if state in (1, 2, 3, 4, 5, 6, 7, 8):
-        ser.write(str(state).encode())
+    if state in state_to_frequency:
+        frequency = state_to_frequency[state]
+        ser.write(str(frequency).encode())
 
 
 def get_button_state():
     return _button_state
+
+def frequencies_array(chords):
+    for i in chords:
+        ser.write((str(i) + "x").encode())
+
+
 
 
 def read_from_serial():

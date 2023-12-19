@@ -20,6 +20,9 @@ const int pins_button[] = {4, 5, 6, 7, 8, 9, 10, 12};
 const int frequencies[] = {NOTE_DO, NOTE_RE, NOTE_MI, NOTE_FA, NOTE_SO, NOTE_LA, NOTE_SI, NOTE_DO2};
 const String names[] = {"Do", "Re", "Mi", "Fa", "Sol", "La", "Si", "Do2"};
 
+float incomingFrequencies[16]; // Adjust the size as needed
+int incomingIndex = 0;
+
 const int buttonCount = 8;
 button buttons[buttonCount];
 
@@ -49,10 +52,16 @@ void loop() {
   }
 
   if (Serial.available() > 0) {
-    int command = Serial.parseInt();
+    String frequency = Serial.readStringUntil("x");
+    String freq = frequency.substring(0, frequency.length() - 1);
+    float victor = freq.toFloat();
 
-    if (command >= 1 && command <= 8) {
-      playNote(buttons[command - 1]);
+
+    if (victor > 0) {
+      incomingFrequencies[incomingIndex++] = victor;
+      if (incomingIndex >= 16) incomingIndex = 0; // Reset the index if it exceeds the array size
+
+      playFrequency(victor);
       delay(200);
       noTone(buzzerPin);
       delay(300);
@@ -63,4 +72,9 @@ void loop() {
 void playNote(button button_) {
   tone(buzzerPin, button_.frequency);
   Serial.println(String(button_.frequency) + ";" + button_.name);
+}
+
+void playFrequency(float frequency) {
+  tone(buzzerPin, frequency);
+  Serial.println(String(frequency) + ";" +"Do");
 }
