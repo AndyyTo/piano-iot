@@ -9,6 +9,7 @@ _button_state = False
 
 
 def listen():
+    ser.flush()
     return ser.readline().decode().strip()
 
 state_to_frequency = {
@@ -34,6 +35,7 @@ def get_button_state():
 def frequencies_array(chords):
     for i in chords:
         ser.write((str(i) + "x").encode())
+        time.sleep(0.5)
 
 
 
@@ -49,5 +51,3 @@ def read_from_serial():
 
     except KeyboardInterrupt:
         print("Exiting...")
-
-

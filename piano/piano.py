@@ -109,13 +109,6 @@ def button_do2(data):
     piano.update_component("MyLog", "Do2")
     piano_utils.set_button_state(8)
 
-
-def music(data):
-    piano.update_component("MyLog", "Music")
-    for i in data.split(";"):
-        piano_utils.set_button_state(int(i))
-        time.sleep(2)
-
 def gptPrompt(data):
     chords = gpt.generate_music(data)
     piano_utils.frequencies_array(chords)
@@ -129,7 +122,6 @@ piano.on_action_recv(action_id="sol", callback=button_sol)
 piano.on_action_recv(action_id="la", callback=button_la)
 piano.on_action_recv(action_id="si", callback=button_si)
 piano.on_action_recv(action_id="do2", callback=button_do2)
-piano.on_action_recv(action_id="music", callback=music)
 
 piano.on_action_recv(action_id="prompt", callback=gptPrompt)
 

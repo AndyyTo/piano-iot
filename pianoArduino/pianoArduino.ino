@@ -52,16 +52,14 @@ void loop() {
   }
 
   if (Serial.available() > 0) {
-    String frequency = Serial.readStringUntil("x");
-    String freq = frequency.substring(0, frequency.length() - 1);
-    float victor = freq.toFloat();
+    float frequency = Serial.parseFloat();
 
 
-    if (victor > 0) {
-      incomingFrequencies[incomingIndex++] = victor;
+    if (frequency > 0) {
+      incomingFrequencies[incomingIndex++] = frequency;
       if (incomingIndex >= 16) incomingIndex = 0; // Reset the index if it exceeds the array size
 
-      playFrequency(victor);
+      playFrequency(frequency);
       delay(200);
       noTone(buzzerPin);
       delay(300);
@@ -76,5 +74,5 @@ void playNote(button button_) {
 
 void playFrequency(float frequency) {
   tone(buzzerPin, frequency);
-  Serial.println(String(frequency) + ";" +"Do");
+  Serial.println(String(frequency) + ";" +"");
 }

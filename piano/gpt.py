@@ -107,4 +107,3 @@ def get_frequencie(note):
 
 def generate_music(data):
     return list(map(get_frequencie, chord_deconstructor(chord_corrector(get_chords(data)))))
-
